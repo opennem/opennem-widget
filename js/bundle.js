@@ -10167,9 +10167,11 @@ var d3 = Object.assign({},
   require("d3-shape"),
   require("d3-axis"),
 );
+
 var dateFormat = require('date-fns/format');
 var colours = require('./modules/chart-colours.js');
 var transform = require('./modules/data-transform.js');
+var fuelTechIds = require('./modules/fuel-tech-ids.js');
 
 function responsivefy(svg) {
   // get container + svg aspect ratio
@@ -10247,20 +10249,10 @@ fetch('https://data.opennem.org.au/power/nem.json')
       .rollup(function(a) {
         var obj = {};
 
-        obj['nem.fuel_tech.brown_coal.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.brown_coal.power'] });
-        obj['nem.fuel_tech.black_coal.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.black_coal.power'] });
-        obj['nem.fuel_tech.biomass.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.biomass.power'] });
-        obj['nem.fuel_tech.distillate.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.distillate.power'] });
-        obj['nem.fuel_tech.battery_discharging.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.battery_discharging.power'] });
-        obj['nem.fuel_tech.hydro.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.hydro.power'] });
-        obj['nem.fuel_tech.gas_steam.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_steam.power'] });
-        obj['nem.fuel_tech.gas_ccgt.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_ccgt.power'] });
-        obj['nem.fuel_tech.gas_ocgt.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_ocgt.power'] });
-        obj['nem.fuel_tech.gas_recip.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_recip.power'] });
-        obj['nem.fuel_tech.wind.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.wind.power'] });
-        obj['nem.fuel_tech.solar.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.solar.power'] });
-        obj['nem.fuel_tech.rooftop_solar.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.rooftop_solar.power'] });
-
+        fuelTechIds.forEach(function(id) {
+          obj[id] = d3.mean(a, function(d) { return d[id] });
+        });
+        
         return obj;
       })
       .entries(data);
@@ -10489,7 +10481,7 @@ fetch('https://data.opennem.org.au/power/nem.json')
     //   });
 
   });
-},{"./modules/chart-colours.js":39,"./modules/data-transform.js":40,"d3-array":1,"d3-axis":2,"d3-collection":3,"d3-scale":10,"d3-selection":11,"d3-shape":12,"d3-time-format":13,"d3-transition":16,"date-fns/format":20}],39:[function(require,module,exports){
+},{"./modules/chart-colours.js":39,"./modules/data-transform.js":40,"./modules/fuel-tech-ids.js":41,"d3-array":1,"d3-axis":2,"d3-collection":3,"d3-scale":10,"d3-selection":11,"d3-shape":12,"d3-time-format":13,"d3-transition":16,"date-fns/format":20}],39:[function(require,module,exports){
 module.exports = ['#8B572A', '#121212', '#A3886F', '#F35020',
 '#00A2FA', '#4582B4', '#F48E1B', '#FDB462', '#FFCD96', '#F9DCBC',
 '#417505', '#DFCF00', '#F8E71C']; // DFCF00
@@ -10554,7 +10546,23 @@ module.exports = function (data) {
   return newArray;
 }
 
-},{"./setup-data-obj.js":41,"./solar-roof.js":42,"./supported-fuel-tech.js":43,"date-fns/add_minutes":18,"date-fns/format":20,"date-fns/is_after":24,"date-fns/sub_minutes":37}],41:[function(require,module,exports){
+},{"./setup-data-obj.js":42,"./solar-roof.js":43,"./supported-fuel-tech.js":44,"date-fns/add_minutes":18,"date-fns/format":20,"date-fns/is_after":24,"date-fns/sub_minutes":37}],41:[function(require,module,exports){
+module.exports = [
+  'nem.fuel_tech.biomass.power',
+  'nem.fuel_tech.black_coal.power',
+  'nem.fuel_tech.brown_coal.power',
+  'nem.fuel_tech.distillate.power',
+  'nem.fuel_tech.gas_ccgt.power',
+  'nem.fuel_tech.gas_ocgt.power',
+  'nem.fuel_tech.gas_recip.power',
+  'nem.fuel_tech.gas_steam.power',
+  'nem.fuel_tech.hydro.power',
+  'nem.fuel_tech.rooftop_solar.power',
+  'nem.fuel_tech.solar.power',
+  'nem.fuel_tech.wind.power',
+  'nem.fuel_tech.battery_discharging.power'
+]
+},{}],42:[function(require,module,exports){
 module.exports = function (date) { 
   var obj = {};
 
@@ -10576,12 +10584,12 @@ module.exports = function (date) {
   return obj;
 }
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = function (ft) { 
   return ft === 'nem.fuel_tech.rooftop_solar.power';
 }
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = function (ft) { 
   return ft === 'nem.fuel_tech.biomass.power' ||
     ft === 'nem.fuel_tech.black_coal.power' ||

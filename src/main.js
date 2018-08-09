@@ -8,9 +8,11 @@ var d3 = Object.assign({},
   require("d3-shape"),
   require("d3-axis"),
 );
+
 var dateFormat = require('date-fns/format');
 var colours = require('./modules/chart-colours.js');
 var transform = require('./modules/data-transform.js');
+var fuelTechIds = require('./modules/fuel-tech-ids.js');
 
 function responsivefy(svg) {
   // get container + svg aspect ratio
@@ -88,20 +90,10 @@ fetch('https://data.opennem.org.au/power/nem.json')
       .rollup(function(a) {
         var obj = {};
 
-        obj['nem.fuel_tech.brown_coal.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.brown_coal.power'] });
-        obj['nem.fuel_tech.black_coal.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.black_coal.power'] });
-        obj['nem.fuel_tech.biomass.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.biomass.power'] });
-        obj['nem.fuel_tech.distillate.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.distillate.power'] });
-        obj['nem.fuel_tech.battery_discharging.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.battery_discharging.power'] });
-        obj['nem.fuel_tech.hydro.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.hydro.power'] });
-        obj['nem.fuel_tech.gas_steam.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_steam.power'] });
-        obj['nem.fuel_tech.gas_ccgt.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_ccgt.power'] });
-        obj['nem.fuel_tech.gas_ocgt.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_ocgt.power'] });
-        obj['nem.fuel_tech.gas_recip.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.gas_recip.power'] });
-        obj['nem.fuel_tech.wind.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.wind.power'] });
-        obj['nem.fuel_tech.solar.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.solar.power'] });
-        obj['nem.fuel_tech.rooftop_solar.power'] = d3.mean(a, function(d) { return d['nem.fuel_tech.rooftop_solar.power'] });
-
+        fuelTechIds.forEach(function(id) {
+          obj[id] = d3.mean(a, function(d) { return d[id] });
+        });
+        
         return obj;
       })
       .entries(data);
