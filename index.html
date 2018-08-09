@@ -1,0 +1,60 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>OpenNEM Widget</title>
+    <style>
+      body { background-color: #ece9e6; font-family: Georgia, 'Times New Roman', Times, serif; }
+      a {color: #c74523 }
+      header {text-align: center; }
+      header h1 { font-size: 14px; padding: 0; margin: 2px 0; font-weight: 300; }
+      header span { position: relative; top: 2px; }
+      h1 img { width: 20px; vertical-align: middle; }
+      footer { font-size: 11px; border-top: 1px solid #ccc; text-align: center; padding-top: 5px; }
+      #chart { text-align: center; min-height: 220px;}
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #ece9e6;
+        stroke-width: 0;
+        shape-rendering: crispEdges;
+      }
+
+      .axis .tick line {
+        stroke: rgba(0,0,0,.1);
+        stroke-width: 1;
+      }
+      .axis--y .tick text {
+        stroke: #000;
+        stroke-width: .5;
+        font-size: 11px;
+        text-shadow: 0 0 15px rgba(255,255,255,.5);
+      }
+      .axis--y .tick:last-child text {
+        visibility: hidden;
+      }
+
+      .browser text {
+        text-anchor: end;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <h3>Unfortunately, OpenNEM requires JavaScript to be enabled for chart and data display.</h3>
+      <h5>Please enable JavaScript in your browser settings.</h5>
+    </noscript>
+
+    <header>
+      <h1><img src="images/logo.png" alt="OpenNEM"> <span>National Electricity Market</span></h1>
+    </header>
+    <div id="chart"></div>
+    <footer>
+      <a href="https://opennem.org.au" target="_blank">OpenNEM</a> is a project of the 
+      <a href="https://opennem.org.au" target="_blank">Energy Transition Hub</a>
+    </footer>
+
+    <script src="js/polyfill.min.js"></script>
+    <script src="js/bundle.js"></script>
+  </body>
+</html>
