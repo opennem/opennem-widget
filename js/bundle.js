@@ -10167,15 +10167,9 @@ var d3 = Object.assign({},
   require("d3-shape"),
   require("d3-axis"),
 );
-var addMinutes = require('date-fns/add_minutes');
-var subMinutes = require('date-fns/sub_minutes');
 var dateFormat = require('date-fns/format');
-var isAfter = require('date-fns/is_after');
-
-var supportedFuelTech = require('./modules/supported-fuel-tech.js');
-var isRoofSolar = require('./modules/solar-roof.js');
-var newEmptyObj = require('./modules/setup-data-obj.js');
 var colours = require('./modules/chart-colours.js');
+var transform = require('./modules/data-transform.js');
 
 function responsivefy(svg) {
   // get container + svg aspect ratio
@@ -10202,56 +10196,6 @@ function responsivefy(svg) {
       svg.attr("height", Math.round(targetWidth / aspect));
       // svg.attr("height", targetHeight);
   }
-}
-
-function transform(data) {
-  console.log(data);
-
-  var length = 2016;
-  var array = [];
-  // var startDate = moment(data[0].history.start);
-  var sDate = data[0].history.start;
-  var lDate = data[0].history.last;
-
-  for (var i=0; i < length; i++) {
-    // array.push(newEmptyObj(startDate.toDate()));
-    array.push(newEmptyObj(dateFormat(sDate)));
-    // startDate.add(5, 'minutes');
-    sDate = addMinutes(sDate, 5);
-  }
-
-  data.forEach(function(d) {
-    if (supportedFuelTech(d.id)) {
-      // d.history.data.forEach(function(point, index) {
-      //   array[index][d.id] = point;
-      // });
-
-      if (isRoofSolar(d.id)) {
-        // 30m interval
-        var rSolarIndex = 0;
-        for (var k=0; k < length; k++) {
-          array[k][d.id] = (typeof d.history.data[rSolarIndex] === 'undefined') ? 0 : d.history.data[rSolarIndex];
-
-          if (k !== 0) {
-            if ((k % 6) === 0) {
-              rSolarIndex += 1;
-            }
-          }
-        }
-      } else {
-        for (var j=0; j < length; j++) {
-          array[j][d.id] = d.history.data[j];
-        }
-      }
-    }
-  });
-
-  lDate = subMinutes(lDate, 4320);
-  var newArray = array.filter(function(d) {
-    return isAfter(new Date(d.date), lDate);
-  });
-
-  return newArray;
 }
 
 var margin = {top: 1, right: 1, bottom: 20, left: 1};
@@ -10545,12 +10489,72 @@ fetch('https://data.opennem.org.au/power/nem.json')
     //   });
 
   });
-},{"./modules/chart-colours.js":39,"./modules/setup-data-obj.js":40,"./modules/solar-roof.js":41,"./modules/supported-fuel-tech.js":42,"d3-array":1,"d3-axis":2,"d3-collection":3,"d3-scale":10,"d3-selection":11,"d3-shape":12,"d3-time-format":13,"d3-transition":16,"date-fns/add_minutes":18,"date-fns/format":20,"date-fns/is_after":24,"date-fns/sub_minutes":37}],39:[function(require,module,exports){
+},{"./modules/chart-colours.js":39,"./modules/data-transform.js":40,"d3-array":1,"d3-axis":2,"d3-collection":3,"d3-scale":10,"d3-selection":11,"d3-shape":12,"d3-time-format":13,"d3-transition":16,"date-fns/format":20}],39:[function(require,module,exports){
 module.exports = ['#8B572A', '#121212', '#A3886F', '#F35020',
 '#00A2FA', '#4582B4', '#F48E1B', '#FDB462', '#FFCD96', '#F9DCBC',
 '#417505', '#DFCF00', '#F8E71C']; // DFCF00
 
 },{}],40:[function(require,module,exports){
+var addMinutes = require('date-fns/add_minutes');
+var subMinutes = require('date-fns/sub_minutes');
+var isAfter = require('date-fns/is_after');
+var dateFormat = require('date-fns/format');
+
+var supportedFuelTech = require('./supported-fuel-tech.js');
+var isRoofSolar = require('./solar-roof.js');
+var newEmptyObj = require('./setup-data-obj.js');
+
+module.exports = function (data) { 
+  console.log(data);
+
+  var length = 2016;
+  var array = [];
+  // var startDate = moment(data[0].history.start);
+  var sDate = data[0].history.start;
+  var lDate = data[0].history.last;
+
+  for (var i=0; i < length; i++) {
+    // array.push(newEmptyObj(startDate.toDate()));
+    array.push(newEmptyObj(dateFormat(sDate)));
+    // startDate.add(5, 'minutes');
+    sDate = addMinutes(sDate, 5);
+  }
+
+  data.forEach(function(d) {
+    if (supportedFuelTech(d.id)) {
+      // d.history.data.forEach(function(point, index) {
+      //   array[index][d.id] = point;
+      // });
+
+      if (isRoofSolar(d.id)) {
+        // 30m interval
+        var rSolarIndex = 0;
+        for (var k=0; k < length; k++) {
+          array[k][d.id] = (typeof d.history.data[rSolarIndex] === 'undefined') ? 0 : d.history.data[rSolarIndex];
+
+          if (k !== 0) {
+            if ((k % 6) === 0) {
+              rSolarIndex += 1;
+            }
+          }
+        }
+      } else {
+        for (var j=0; j < length; j++) {
+          array[j][d.id] = d.history.data[j];
+        }
+      }
+    }
+  });
+
+  lDate = subMinutes(lDate, 4320);
+  var newArray = array.filter(function(d) {
+    return isAfter(new Date(d.date), lDate);
+  });
+
+  return newArray;
+}
+
+},{"./setup-data-obj.js":41,"./solar-roof.js":42,"./supported-fuel-tech.js":43,"date-fns/add_minutes":18,"date-fns/format":20,"date-fns/is_after":24,"date-fns/sub_minutes":37}],41:[function(require,module,exports){
 module.exports = function (date) { 
   var obj = {};
 
@@ -10572,12 +10576,12 @@ module.exports = function (date) {
   return obj;
 }
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports = function (ft) { 
   return ft === 'nem.fuel_tech.rooftop_solar.power';
 }
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = function (ft) { 
   return ft === 'nem.fuel_tech.biomass.power' ||
     ft === 'nem.fuel_tech.black_coal.power' ||
