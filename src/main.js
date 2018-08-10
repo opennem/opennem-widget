@@ -13,6 +13,45 @@ var dateFormat = require('date-fns/format');
 var colours = require('./modules/chart-colours.js');
 var transform = require('./modules/data-transform.js');
 var fuelTechIds = require('./modules/fuel-tech-ids.js');
+var fuelTechLabels = require('./modules/fuel-tech-labels.js');
+
+// date format
+var formatTime = d3.timeFormat("%e %b, %H:%M");
+
+var legendTable = document.getElementById("legend-table");
+legendTable.style.display = 'none';
+document.getElementById("legend-toggle").onclick = function() {
+  var currentDisplay = legendTable.style.display;
+  if (currentDisplay === 'none') {
+    legendTable.style.display = 'block';
+  } else {
+    legendTable.style.display = 'none';
+  }
+}
+
+var timeout = false, // holder for timeout id
+    delay = 250, // delay after event is "complete" to run callback
+    calls = 0;
+
+// window.resize callback function
+function getWindowWidth() {
+  console.log(window.innerWidth);
+  console.log(window.innerHeight);
+  calls += 1;
+  console.log(calls);
+  return window.innerWidth;
+}
+
+// window.resize event listener
+window.addEventListener('resize', function() {
+    // clear the timeout
+  clearTimeout(timeout);
+  // start timing for event "completion"
+  timeout = setTimeout(getWindowWidth, delay);
+});
+
+var windowWidth = window.innerWidth > 600 ? 590 : window.innerWidth-10;
+
 
 function responsivefy(svg) {
   // get container + svg aspect ratio
@@ -41,8 +80,8 @@ function responsivefy(svg) {
   }
 }
 
-var margin = {top: 1, right: 1, bottom: 20, left: 1};
-var width = 300 - margin.left - margin.right;
+var margin = {top: 1, right: 2, bottom: 20, left: 2};
+var width = windowWidth - margin.left - margin.right;
 var height = 220 - margin.top - margin.bottom;
 
 var svg = d3.select("#chart")
@@ -73,6 +112,10 @@ var area = d3.area()
   .y0(function(d) { return y(d[0]); })
   .y1(function(d) { return y(d[1]); });
 
+function redraw() {
+  
+}
+
 fetch('https://data.opennem.org.au/power/nem.json')
   .then(function(response) {
     return response.json();
@@ -101,20 +144,30 @@ fetch('https://data.opennem.org.au/power/nem.json')
     data = entries;
   
     x.domain(d3.extent(data, function(d) { return d3.isoParse(d.key); }));
-    y.domain([0, 30000]);
+    y.domain([0, 33000]);
     z.domain(keys);
     stack
       .keys(keys)
       .value(function value(d, key) {
         return d.value[key];
       });
+    
+    g.append("text")
+      .attr("class", "title")
+      .text('Generation MW')
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("dy", "1.5em")
+      .attr("dx", ".5em")
+      .style("font-size", 10);
+
+    var mouseGroup = g.append('g').attr('class', 'mouse-group');
 
     var layer = g.selectAll(".layer")
-      .data(stack(data))
+      .data(stack(entries))
       .enter().append("g")
         .attr("class", "layer");
     
-    var mouseGroup = g.append('g').attr('class', 'mouse-group');
         
     g.append("g")
       .attr("class", "axis axis--x")
@@ -145,23 +198,49 @@ fetch('https://data.opennem.org.au/power/nem.json')
         .attr("x", 6)
         .style("text-anchor", "start");
 
-    mouseGroup.append("path") // this is the black vertical line to follow mouse
+    mouseGroup.append('g')
+      .append("path") // this is the black vertical line to follow mouse
       .attr("class", "mouse-line")
-      .style("stroke", "black")
+      .style("stroke", "#c74523")
       .style("stroke-width", "1px")
+        
+    var tooltip = mouseGroup.append("g")
+      .attr("class", "tooltip")
       .style("opacity", "0");
+
+    // tooltip.append("rect")
+    //   .style("stroke", "red")
+    //   .style("width", "30px")
+    //   .style("height", "10px")
+    //   .attr('fill', 'red')
     
-    var focus = mouseGroup.append("g")
-      .attr("class", "focus")
-      .style("opacity", "1");
+    tooltip.append("text")
+      .attr("class", "date")
+      .text('')
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("dy", "1.3em")
+      .attr("dx", ".5em")
+      .style("font-size", 10);
 
-    focus.append("circle")
-      .attr("r", 5);
-
-    focus.append("text")
-      .attr("x", 9)
-      .attr("dy", ".35em")
-      .style("font-size",15);
+    var valueWrapper = tooltip.append("g")
+      .attr("class", "value-wrapper")
+    
+    valueWrapper.append('rect')
+      .style("width", width+"px")
+      .style("height", "18px")
+      .style("opacity", ".3")
+      .attr('fill', '#999')
+    
+    valueWrapper.append("text")
+      .attr("class", "value")
+      .text('')
+      .attr("x", width)
+      .attr("y", 0)
+      .attr("dy", "1.3em")
+      .attr("dx", "-.5em")
+      .style("text-anchor", "end")
+      .style("font-size", 10);
 
     layer.append("path")
       .attr("class", "area")
@@ -170,31 +249,67 @@ fetch('https://data.opennem.org.au/power/nem.json')
     
     layer.attr("opacity", 1)
       .on("mouseover", function(d, i) {
+        // svg.selectAll(".layer").transition()
+        //   .duration(10)
+        //   .attr("opacity", function(d, j) {
+        //     return j != i ? 0.6 : 1;
+        // });
+      
+        d3.select(".title")
+          .style("opacity", "0");
+
         svg.selectAll(".layer").transition()
           .duration(100)
-          .attr("opacity", function(d, j) {
-            return j != i ? 0.6 : 1;
-        });
+          .attr("opacity", '.85');
 
         d3.select(".mouse-line")
           .style("opacity", "1");
+        d3.select(".tooltip")
+          .style("opacity", "1");
       })
       .on("mouseout", function(d, i) {
+        d3.select(".title")
+          .style("opacity", "1");
         svg.selectAll(".layer").transition()
           .duration(100)
           .attr("opacity", "1");
         d3.select(".mouse-line")
-          .style("opacity", "1");
+          .style("opacity", "0");
+        d3.select(".tooltip")
+          .style("opacity", "0");
       })
-      .on('mousemove', function() { // mouse moving over canvas
+      .on('mousemove', function(d) { // mouse moving over canvas
         var mouse = d3.mouse(this);
+
+        var bisectDate = d3.bisector(function(d) {
+          return d3.isoParse(d.date);
+        }).left;
+
+        var xDate = x.invert(mouse[0]);
+        var i = bisectDate(newData, xDate, 1);
+        var d0 = newData[i - 1];
+        var d1 = newData[i];
+        var xDateData = xDate - d0.date > d1.date - xDate ? d1 : d0;
+        var hoverFuelTech = d.key;
+
+        d3.select('.tooltip .date').text(formatTime(d3.isoParse(xDateData.date)));
+        d3.select('.tooltip .value').text(fuelTechLabels[hoverFuelTech] + ': ' + xDateData[hoverFuelTech] + ' MW')
+
         d3.select(".mouse-line")
           .attr("d", function() {
-            var d = "M" + mouse[0] + "," + height;
-            d += " " + mouse[0] + "," + 0;
+            var d = "M" + mouse[0] + "," + (height+10);
+            d += " " + mouse[0] + "," + 18;
             return d;
           });
-        })
+        
+        // d3.select(".tooltip rect")
+        //   .attr("x", function() {
+        //     var x = mouse[0];
+        //     if (x <= 15) x = 15;
+        //     if (x >= width-15) x = width-15;
+        //     return x;
+        //   })
+      })
   
     
     // layer.filter(function(d) { return d[d.length - 1][1] - d[d.length - 1][0] > 0.01; })

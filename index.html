@@ -4,39 +4,25 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>OpenNEM Widget</title>
     <style>
-      body { background-color: #ece9e6; font-family: Georgia, 'Times New Roman', Times, serif; }
+      body { background-color: #ece9e6; font-family: Georgia, 'Times New Roman', Times, serif; margin-top: 10px; }
       a {color: #c74523 }
-      header {text-align: center; }
+      header {text-align: center;}
       header h1 { font-size: 14px; padding: 0; margin: 2px 0; font-weight: 300; }
       header span { position: relative; top: 2px; }
       h1 img { width: 20px; vertical-align: middle; }
       footer { font-size: 11px; border-top: 1px solid #ccc; text-align: center; padding-top: 5px; }
+      .chart-wrapper {position: relative;}
       #chart { text-align: center; min-height: 220px;}
+      text.date, text.value { font-weight: bold; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
       .axis path,
-      .axis line {
-        fill: none;
-        stroke: #ece9e6;
-        stroke-width: 0;
-        shape-rendering: crispEdges;
-      }
-
-      .axis .tick line {
-        stroke: rgba(0,0,0,.1);
-        stroke-width: 1;
-      }
-      .axis--y .tick text {
-        stroke: #000;
-        stroke-width: .5;
-        font-size: 11px;
-        text-shadow: 0 0 15px rgba(255,255,255,.5);
-      }
-      .axis--y .tick:last-child text {
-        visibility: hidden;
-      }
-
-      .browser text {
-        text-anchor: end;
-      }
+      .axis line {fill: none;stroke: #a5a3a2;stroke-width: 0;shape-rendering: crispEdges;}
+      .axis .tick line {stroke: rgba(200,200,200,.3);stroke-width: 1;}
+      .axis--y .tick text {stroke: #000;stroke-width: .5;font-size: 11px;text-shadow: 0 0 15px rgba(255,255,255,.5);}
+      .axis--y .tick:last-child text {visibility: hidden;}
+      .browser text {text-anchor: end;}
+      #legend-table {position: absolute; top: 0; left: 50%; margin-left: -65px; width: 130px; background-color: #fff; display: none;}
+      #legend-table table { font-size: 10px; }
+      #legend-table .source-colour {display: inline-block; width: 10px; height: 10px;}
     </style>
   </head>
   <body>
@@ -48,10 +34,100 @@
     <header>
       <h1><img src="images/logo.png" alt="OpenNEM"> <span>National Electricity Market</span></h1>
     </header>
-    <div id="chart"></div>
+    <div class="chart-wrapper">
+      <div id="legend-table">
+        <table>
+          <tbody>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(248, 231, 28);"></span>
+                <span class="source-label">Solar (Rooftop)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(223, 207, 0);"></span>
+                <span class="source-label">Solar (Utility)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(65, 117, 5);"></span>
+                <span class="source-label">Wind</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(249, 220, 188);"></span>
+                <span class="source-label">Gas (Reciprocating)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(255, 205, 150);"></span>
+                <span class="source-label">Gas (OCGT)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(253, 180, 98);"></span>
+                <span class="source-label">Gas (CCGT)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(244, 142, 27);"></span>
+                <span class="source-label">Gas (Steam)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(69, 130, 180);"></span>
+                <span class="source-label">Hydro</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(0, 162, 250);"></span>
+                <span class="source-label">Battery (Discharging)</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(243, 80, 32);"></span>
+                <span class="source-label">Distillate</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(163, 136, 111);"></span>
+                <span class="source-label">Biomass</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(18, 18, 18);"></span>
+                <span class="source-label">Black Coal</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="row-label">
+                <span class="source-colour" style="background-color: rgb(139, 87, 42);"></span>
+                <span class="source-label">Brown Coal</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="chart"></div>
+    </div>
     <footer>
+      <div style="margin-bottom: 3px;">
+        <a href="javascript:" id="legend-toggle">Graph Legend</a> | 
+        <a href="https://reneweconomy.com.au/opennem-widget/">More info</a>
+      </div>
       <a href="https://opennem.org.au" target="_blank">OpenNEM</a> is a project of the 
-      <a href="https://opennem.org.au" target="_blank">Energy Transition Hub</a>
+      <a href="http://www.energy-transition-hub.org/" target="_blank">Energy Transition Hub</a>
     </footer>
 
     <script src="js/polyfill.min.js"></script>
