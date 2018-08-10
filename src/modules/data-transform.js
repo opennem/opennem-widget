@@ -31,9 +31,15 @@ module.exports = function (data) {
 
       if (isRoofSolar(d.id)) {
         // 30m interval
+        var history = d.history.data;
         var rSolarIndex = 0;
+
+        if (d.forecast) {
+          // add forecast data
+          history.push.apply(history, d.forecast.data);
+        }
         for (var k=0; k < length; k++) {
-          array[k][d.id] = (typeof d.history.data[rSolarIndex] === 'undefined') ? 0 : d.history.data[rSolarIndex];
+          array[k][d.id] = (typeof history[rSolarIndex] === 'undefined') ? 0 : history[rSolarIndex];
 
           if (k !== 0) {
             if ((k % 6) === 0) {
