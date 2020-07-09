@@ -1,36 +1,19 @@
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>OpenNEM Widget</title>
-    <style>
-      body { background-color: #ece9e6; font-family: Georgia, 'Times New Roman', Times, serif; margin-top: 10px; }
-      a {color: #c74523 }
-      header {text-align: center;}
-      header h1 { font-size: 14px; padding: 0; margin: 2px 0; font-weight: 300; }
-      header span { position: relative; top: 2px; }
-      h1 img { width: 20px; vertical-align: middle; }
-      footer { font-size: 11px; border-top: 1px solid #ccc; text-align: center; padding-top: 5px; }
-      .chart-wrapper {position: relative;}
-      #chart { text-align: center; min-height: 220px;}
-      text.date, text.value { font-weight: bold; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
-      .axis path,
-      .axis line {fill: none;stroke: #a5a3a2;stroke-width: 0;shape-rendering: crispEdges;}
-      .axis .tick line {stroke: rgba(200,200,200,.3);stroke-width: 1;}
-      .axis--y .tick text {stroke: #000;stroke-width: .5;font-size: 11px;text-shadow: 0 0 15px rgba(255,255,255,.5);}
-      .axis--y .tick:last-child text {visibility: hidden;}
-      .browser text {text-anchor: end;}
-      #legend-table {position: absolute; top: 0; left: 50%; margin-left: -65px; width: 130px; background-color: #fff; display: none;}
-      #legend-table table { font-size: 10px; }
-      #legend-table .source-colour {display: inline-block; width: 10px; height: 10px;}
-    </style>
-  </head>
-  <body>
-    <noscript>
-      <h3>Unfortunately, OpenNEM requires JavaScript to be enabled for chart and data display.</h3>
-      <h5>Please enable JavaScript in your browser settings.</h5>
-    </noscript>
 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OpenNEM Widget</title>
+  <link rel="stylesheet" href="css/opennem-widget.css">
+</head>
+
+<body>
+  <noscript>
+    <h3>Unfortunately, OpenNEM requires JavaScript to be enabled for chart and data display.</h3>
+    <h5>Please enable JavaScript in your browser settings.</h5>
+  </noscript>
+
+  <div class="opennem-widget">
     <header>
       <h1><img src="images/logo.png" alt="OpenNEM"> <span>National Electricity Market</span></h1>
     </header>
@@ -123,14 +106,16 @@
     </div>
     <footer>
       <div style="margin-bottom: 3px;">
-        <a href="javascript:" id="legend-toggle">Graph Legend</a> | 
+        <a href="javascript:" id="legend-toggle">Graph Legend</a> |
         <a href="https://reneweconomy.com.au/opennem-widget/">More info</a>
       </div>
-      <a href="https://opennem.org.au" target="_blank">OpenNEM</a> is a project of the 
+      <a href="https://opennem.org.au" target="_blank">OpenNEM</a> is a project of the
       <a href="http://www.energy-transition-hub.org/" target="_blank">Energy Transition Hub</a>
     </footer>
+  </div>
 
-    <script src="js/polyfill.min.js"></script>
-    <script src="js/bundle.js"></script>
-  </body>
+  <script src="js/polyfill.min.js"></script>
+  <script src="js/bundle.js"></script>
+</body>
+
 </html>
