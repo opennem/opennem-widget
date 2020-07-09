@@ -1,9 +1,10 @@
 import {
   setup,
   drawTitle,
-  drawXAxis,
+  drawXAxisGrid,
+  drawXAxisText,
   drawYAxis,
-  drawStackedArea,
+  drawStackedAreaHover,
   drawHover,
 } from "./chart-functions";
 
@@ -11,8 +12,8 @@ export default function (viz, data) {
   console.log(viz, data);
   setup(viz, data);
   drawTitle(viz);
-  drawStackedArea(viz, data);
-  drawXAxis(viz);
+  drawXAxisText(viz);
+  drawStackedAreaHover(viz, data);
+  drawXAxisGrid(viz);
   drawYAxis(viz);
-  drawHover(viz);
 }

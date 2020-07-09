@@ -3,18 +3,22 @@ import { scaleTime, scaleLinear } from "d3-scale";
 import { area as d3Area, stack as d3Stack, curveMonotoneX } from "d3-shape";
 
 export default function (chartId) {
-  // const formatTime = d3.timeFormat("%e %b, %H:%M");
-  const windowWidth = window.innerWidth > 600 ? 590 : window.innerWidth - 10;
-  const margin = { top: 1, right: 0, bottom: 15, left: 0 };
-  const width = windowWidth - margin.left - margin.right;
-  const height = 220 - margin.top - margin.bottom;
+  const divHeight = 230;
   const svg = select("#" + chartId)
-    .append("svg")
+    .style("height", divHeight + "px")
+    .append("svg");
+  const divWidth = document.getElementById(chartId).offsetWidth;
+  const margin = { top: 0, right: 0, bottom: 15, left: 0 };
+  const width = divWidth - margin.left - margin.right;
+  const height = divHeight - margin.top - margin.bottom;
+
+  svg
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
   const g = svg
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
   const x = scaleTime().rangeRound([0, width]);
   const y = scaleLinear().rangeRound([height, 0]);
   const stack = d3Stack();
@@ -29,6 +33,7 @@ export default function (chartId) {
     .y1(function (d) {
       return y(d[1]);
     });
+
   return {
     width: width,
     height: height,

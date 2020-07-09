@@ -60,6 +60,16 @@ export const fuelTechIdColours = (function () {
   return obj;
 })();
 
+export function getLabelById(id) {
+  let label = "";
+  fuelTechKeys.forEach((key) => {
+    if (fuelTechs[key] === id) {
+      label = fuelTechLabels[key];
+    }
+  });
+  return label;
+}
+
 export function isRoofSolar(id) {
   return id === fuelTechs.rooftop_solar;
 }

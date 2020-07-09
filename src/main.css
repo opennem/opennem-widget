@@ -4,48 +4,12 @@
   display: inline-block;
   border-radius: 6px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  width: 100%;
 }
 
-.opennem-widget a {
+/* .opennem-widget a {
   color: #c74523
-}
-
-.opennem-widget header {
-  text-align: center;
-}
-
-.opennem-widget header h1 {
-  font-size: 14px;
-  padding: 0;
-  margin: 2px 0;
-  font-weight: 300;
-}
-
-.opennem-widget header span {
-  position: relative;
-  top: 2px;
-}
-
-.opennem-widget h1 img {
-  width: 20px;
-  vertical-align: middle;
-}
-
-.opennem-widget footer {
-  font-size: 11px;
-  border-top: 1px solid #ccc;
-  text-align: center;
-  padding-top: 5px;
-}
-
-.opennem-widget .chart-wrapper {
-  position: relative;
-}
-
-.opennem-widget #chart {
-  text-align: center;
-  min-height: 220px;
-}
+} */
 
 .opennem-widget text {
   font-weight: 300;
@@ -55,8 +19,9 @@
 .opennem-widget .axis path,
 .opennem-widget .axis line {
   fill: none;
-  stroke: #a5a3a2;
   stroke-width: 0;
+  stroke-dasharray: 4.8;
+  stroke: rgba(0, 0, 0, 0.1);
   shape-rendering: crispEdges;
 }
 
@@ -76,6 +41,18 @@
 
 .opennem-widget .browser text {
   text-anchor: end;
+}
+
+.opennem-widget .hover-top-rect,
+.opennem-widget .hover-bottom-rect {
+  fill: rgba(199, 69, 35, 0.9);
+}
+
+.opennem-widget .hover-text {
+  fill: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-anchor: middle;
 }
 
 .opennem-widget #legend-table {
