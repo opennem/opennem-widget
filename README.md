@@ -1,6 +1,6 @@
 # OpenNEM Widget
 
-OpenNEM widget is a standalone application that visualises the Australia NEM (eastern and southern Australia states and territories) power generation for the last three days in 30 minutes interval, stacked by fuel technologies that generates the power.
+OpenNEM widget is a standalone application that visualises the Australia NEM (eastern and southern Australia states and territories) power generation for the last three days in 30 minute interval, stacked by fuel technologies that generates the power.
 
 If you are looking for the full front-end version of OpenNEM, it can be found
 [here](https://github.com/opennem/opennem-fe).
