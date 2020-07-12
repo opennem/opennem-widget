@@ -2,11 +2,12 @@
 
 OpenNEM widget is a standalone application that visualises the Australia NEM (eastern and southern Australia states and territories) power generation for the last three days in 30 minutes interval, stacked by fuel technologies that generates the power.
 
-The widget is a compact front-end version of the full project of 
-[OpenNEM](https://github.com/opennem/opennem-fe).
+If you are looking for the full front-end version of OpenNEM, it can be found
+[here](https://github.com/opennem/opennem-fe).
 
 ## Installation
-To run the application, you will need [Yarn](https://classic.yarnpkg.com/en/) on your system. 
+
+To run the application, you will need [Yarn](https://classic.yarnpkg.com/en/) on your system.
 
 Then open up the project folder in your command line and run:
 
@@ -15,7 +16,9 @@ yarn install
 ```
 
 ## For development or to see it running locally in your browser
+
 Run
+
 ```javascript
 yarn start
 ```
@@ -23,7 +26,9 @@ yarn start
 A browser window should open up to `http://localhost:8080`
 
 ## For production
+
 Run
+
 ```javascript
 yarn build
 ```
@@ -31,6 +36,7 @@ yarn build
 Built and minified files will be created inside the `dist` folder. You can serve these files from any web server pointing the default html to `index.html`
 
 ## License
+
 The MIT License (MIT)
 
 Copyright 2020 Steven Tan
