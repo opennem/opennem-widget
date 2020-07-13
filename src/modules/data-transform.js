@@ -1,64 +1,78 @@
-var addMinutes = require('date-fns/add_minutes');
-var subMinutes = require('date-fns/sub_minutes');
-var isAfter = require('date-fns/is_after');
-var dateFormat = require('date-fns/format');
+import { timeParse } from "d3-time-format";
+import { isRoofSolar, isValidFuelTech, fuelTechs } from "./fuel-techs";
+import newDataObj from "./new-data-obj";
 
-var supportedFuelTech = require('./supported-fuel-tech.js');
-var isRoofSolar = require('./solar-roof.js');
-var newEmptyObj = require('./setup-data-obj.js');
-
-module.exports = function (data) { 
-  console.log(data);
-
-  var length = 2016;
-  var array = [];
-  // var startDate = moment(data[0].history.start);
-  var sDate = data[0].history.start;
-  var lDate = data[0].history.last;
-
-  for (var i=0; i < length; i++) {
-    // array.push(newEmptyObj(startDate.toDate()));
-    array.push(newEmptyObj(dateFormat(sDate)));
-    // startDate.add(5, 'minutes');
-    sDate = addMinutes(sDate, 5);
+function getDataPoint(data) {
+  // look for black coal
+  let dataPoint = data.find((d) => d.id === fuelTechs.black_coal);
+  if (!dataPoint) {
+    // if not found, use first point
+    dataPoint = data[0];
   }
+  return dataPoint;
+}
 
-  data.forEach(function(d) {
-    if (supportedFuelTech(d.id)) {
-      // d.history.data.forEach(function(point, index) {
-      //   array[index][d.id] = point;
-      // });
+export default function (data) {
+  if (data.length > 0) {
+    const length = 2016;
+    let array = [];
+    const dataPoint = getDataPoint(data);
 
-      if (isRoofSolar(d.id)) {
-        // 30m interval
-        var history = d.history.data;
-        var rSolarIndex = 0;
+    const sDate = dataPoint.history.start;
+    const startDateString = sDate.substring(0, 16);
+    const startDateTime = timeParse("%Y-%m-%dT%H:%M")(startDateString);
 
-        if (d.forecast) {
-          // add forecast data
-          history.push.apply(history, d.forecast.data);
-        }
-        for (var k=0; k < length; k++) {
-          array[k][d.id] = (typeof history[rSolarIndex] === 'undefined') ? 0 : history[rSolarIndex];
+    const lDate = dataPoint.history.last;
+    const lastDateString = lDate.substring(0, 16);
+    const lastDateTime = timeParse("%Y-%m-%dT%H:%M")(lastDateString);
+    const lastTime = lastDateTime.getTime();
 
-          if (k !== 0) {
-            if ((k % 6) === 0) {
-              rSolarIndex += 1;
+    let startTime = startDateTime.getTime();
+    for (let i = 0; i < length; i++) {
+      array.push(newDataObj(startTime));
+      startTime += 300000;
+    }
+
+    data.forEach(function (d) {
+      if (isValidFuelTech(d.id)) {
+        if (isRoofSolar(d.id)) {
+          // 30m interval
+          var history = d.history.data;
+          var rSolarIndex = 0;
+
+          if (d.forecast) {
+            // add forecast data
+            history.push.apply(history, d.forecast.data);
+          }
+          for (let k = 0; k < length; k++) {
+            array[k][d.id] =
+              typeof history[rSolarIndex] === "undefined"
+                ? 0
+                : history[rSolarIndex];
+
+            if (k !== 0) {
+              if (k % 6 === 0) {
+                rSolarIndex += 1;
+              }
             }
           }
-        }
-      } else {
-        for (var j=0; j < length; j++) {
-          array[j][d.id] = d.history.data[j];
+        } else {
+          for (let j = 0; j < length; j++) {
+            array[j][d.id] = d.history.data[j];
+          }
         }
       }
+    });
+
+    if (array && array.length > 0) {
+      const last3days = lastTime - 259200000;
+      array = array.filter(function (a) {
+        return a.time >= last3days;
+      });
     }
-  });
 
-  lDate = subMinutes(lDate, 4320);
-  var newArray = array.filter(function(d) {
-    return isAfter(new Date(d.date), lDate);
-  });
-
-  return newArray;
+    return array;
+  } else {
+    return [];
+  }
 }
