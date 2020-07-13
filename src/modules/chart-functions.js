@@ -4,7 +4,12 @@ import { format } from "d3-format";
 import { extent, bisector } from "d3-array";
 import { axisLeft, axisBottom } from "d3-axis";
 
-import { fuelTechIds, fuelTechIdColours, getLabelById } from "./fuel-techs";
+import {
+  fuelTechIds,
+  fuelTechIdColours,
+  getLabelById,
+  getColourById,
+} from "./fuel-techs";
 
 export function setup(viz, data) {
   viz.x.domain(
@@ -23,7 +28,7 @@ export function drawTitle(viz) {
     .append("text")
     .attr("class", "title")
     .text("Generation")
-    .attr("x", 2)
+    .attr("x", 6)
     .attr("y", 14)
     .style("font-size", 10)
     .style("fill", "#333")
@@ -105,12 +110,12 @@ export function drawYAxis(viz) {
 }
 
 export function drawStackedAreaHover(viz, data) {
-  const topRectWidth = 150;
+  const topRectWidth = 160;
   const topLeftEdge = topRectWidth / 2;
   const topRightEdge = viz.width - topLeftEdge;
   const topRectHoverFn = function (mouseLoc) {
-    if (mouseLoc <= topLeftEdge) return 0;
-    if (mouseLoc >= topRightEdge) return viz.width - topRectWidth;
+    if (mouseLoc <= topLeftEdge) return 1;
+    if (mouseLoc >= topRightEdge) return viz.width - topRectWidth - 1;
     return mouseLoc - topLeftEdge;
   };
 
@@ -118,8 +123,8 @@ export function drawStackedAreaHover(viz, data) {
   const bottomLeftEdge = bottomRectWidth / 2;
   const bottomRightEdge = viz.width - bottomLeftEdge;
   const bottomRectHoverFn = function (mouseLoc) {
-    if (mouseLoc <= bottomLeftEdge) return 0;
-    if (mouseLoc >= bottomRightEdge) return viz.width - bottomRectWidth;
+    if (mouseLoc <= bottomLeftEdge) return 1;
+    if (mouseLoc >= bottomRightEdge) return viz.width - bottomRectWidth - 1;
     return mouseLoc - bottomLeftEdge;
   };
 
@@ -152,19 +157,27 @@ export function drawStackedAreaHover(viz, data) {
     .append("rect")
     .attr("class", "hover-top-rect")
     .attr("width", topRectWidth)
-    .attr("height", 20)
-    .attr("rx", 3);
+    .attr("height", 18)
+    .attr("y", 1)
+    .attr("rx", 6);
   hover
     .append("rect")
     .attr("class", "hover-bottom-rect")
     .attr("width", bottomRectWidth)
     .attr("height", 15)
-    .attr("rx", 3);
+    .attr("rx", 6);
   hover
     .append("text")
     .attr("class", "hover-text hover-date")
     .attr("y", viz.height + 11);
   hover.append("text").attr("class", "hover-text hover-value").attr("y", 14);
+  hover
+    .append("rect")
+    .attr("class", "hover-ft-rect")
+    .attr("width", 12)
+    .attr("height", 12)
+    .attr("rx", 1)
+    .attr("y", 4);
 
   stackedArea.on("mouseover", function () {
     select(".hover-group").style("opacity", "1");
@@ -194,9 +207,14 @@ export function drawStackedAreaHover(viz, data) {
     select(".hover-top-rect").attr("x", function () {
       return topRectHoverFn(mouse[0]);
     });
+    select(".hover-ft-rect")
+      .attr("x", function () {
+        return topRectHoverFn(mouse[0]) + 7;
+      })
+      .style("fill", getColourById(ftId));
     select(".hover-value")
       .attr("x", function () {
-        return topRectHoverFn(mouse[0]) + topLeftEdge;
+        return topRectHoverFn(mouse[0]) + 22;
       })
       .text(getLabelById(ftId) + ": " + valueFormat(dataPoint[ftId]) + " MW");
     select(".hover-bottom-rect")

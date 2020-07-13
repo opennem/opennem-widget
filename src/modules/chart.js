@@ -5,7 +5,6 @@ import {
   drawXAxisText,
   drawYAxis,
   drawStackedAreaHover,
-  drawHover,
 } from "./chart-functions";
 
 export default function (viz, data) {
