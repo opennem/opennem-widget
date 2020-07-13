@@ -4,6 +4,7 @@ const TerserJSPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -19,6 +20,14 @@ module.exports = {
       filename: "[name].css",
     }),
     new FixStyleOnlyEntriesPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "src/img/",
+          to: "img/[name].[ext]",
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
