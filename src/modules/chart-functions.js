@@ -64,13 +64,11 @@ export function drawTitle(viz, data) {
   viz.g
     .append("text")
     .attr("class", "title")
-    .text("Generation")
     .attr("x", 6)
     .attr("y", 14)
-    .style("font-size", 10)
     .style("fill", "#333")
     .append("tspan")
-    .text(" MW")
+    .text("MW")
     .style("font-size", 8)
     .style("font-weight", "bold");
 
@@ -83,7 +81,7 @@ export function drawTitle(viz, data) {
     .style("text-anchor", "end")
     .append("tspan")
     .attr("class", "stat-title")
-    .text("Average: ")
+    .text("Av.: ")
     .append("tspan")
     .attr("class", "stat-value")
     .text(averageConsumption + " MW     ")
