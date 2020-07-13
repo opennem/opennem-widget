@@ -9,9 +9,39 @@ import {
   fuelTechIdColours,
   getLabelById,
   getColourById,
+  isRenewable,
 } from "./fuel-techs";
 
+const dateFormat = d3TimeFormat("%_d %b, %I:%M %p");
+const valueFormat = format(",.0f");
+const percentFormat = format(",.2f");
+
+function calculateTotalConsumptionAndRenewables(data) {
+  data.forEach(function (d) {
+    let totalConsumption = 0;
+    let totalRenewable = 0;
+    fuelTechIds.forEach(function (ft) {
+      totalConsumption += d.value[ft];
+      if (isRenewable(ft)) {
+        totalRenewable += d.value[ft];
+      }
+    });
+    d._totalConsumption = totalConsumption;
+    d._totalRenewable = totalRenewable;
+  });
+}
+
+function sumTotals(data, property) {
+  let total = 0;
+  data.forEach(function (d) {
+    total += d[property];
+  });
+  return total;
+}
+
 export function setup(viz, data) {
+  calculateTotalConsumptionAndRenewables(data);
+
   viz.x.domain(
     extent(data, function (d) {
       return d.key;
@@ -23,7 +53,14 @@ export function setup(viz, data) {
   });
 }
 
-export function drawTitle(viz) {
+export function drawTitle(viz, data) {
+  const allConsumption = sumTotals(data, "_totalConsumption");
+  const allRenewable = sumTotals(data, "_totalRenewable");
+  const averageConsumption = valueFormat(allConsumption / data.length);
+  const renewablePercentage = percentFormat(
+    (allRenewable / allConsumption) * 100
+  );
+
   viz.g
     .append("text")
     .attr("class", "title")
@@ -36,6 +73,26 @@ export function drawTitle(viz) {
     .text(" MW")
     .style("font-size", 8)
     .style("font-weight", "bold");
+
+  viz.g
+    .append("text")
+    .attr("class", "stats")
+    .attr("x", viz.width - 6)
+    .attr("y", 14)
+    .style("font-size", 10)
+    .style("text-anchor", "end")
+    .append("tspan")
+    .attr("class", "stat-title")
+    .text("Average: ")
+    .append("tspan")
+    .attr("class", "stat-value")
+    .text(averageConsumption + " MW     ")
+    .append("tspan")
+    .attr("class", "stat-title")
+    .text("Renewables: ")
+    .append("tspan")
+    .attr("class", "stat-value")
+    .text(renewablePercentage + "%");
 }
 export function drawXAxisGrid(viz) {
   viz.g
@@ -110,7 +167,7 @@ export function drawYAxis(viz) {
 }
 
 export function drawStackedAreaHover(viz, data) {
-  const topRectWidth = 160;
+  const topRectWidth = 260;
   const topLeftEdge = topRectWidth / 2;
   const topRightEdge = viz.width - topLeftEdge;
   const topRectHoverFn = function (mouseLoc) {
@@ -171,6 +228,7 @@ export function drawStackedAreaHover(viz, data) {
     .attr("class", "hover-text hover-date")
     .attr("y", viz.height + 11);
   hover.append("text").attr("class", "hover-text hover-value").attr("y", 14);
+  hover.append("text").attr("class", "hover-text hover-total").attr("y", 14);
   hover
     .append("rect")
     .attr("class", "hover-ft-rect")
@@ -187,8 +245,6 @@ export function drawStackedAreaHover(viz, data) {
   });
   stackedArea.on("touchmove mousemove", function (hoverPath) {
     const mouse = d3Mouse(this);
-    const dateFormat = d3TimeFormat("%_d %b, %I:%M %p");
-    const valueFormat = format(",.0f");
     const xDate = viz.x.invert(mouse[0]);
     const ftId = hoverPath.key;
     const bisectDate = bisector(function (d) {
@@ -198,30 +254,42 @@ export function drawStackedAreaHover(viz, data) {
     const i = bisectDate(data, xDate.getTime(), 1);
     const dataTime = new Date(parseInt(data[i].key));
     const dataPoint = data[i].value;
+    const dataPointTotal = data[i]._totalConsumption;
 
     select(".hover-line")
       .attr("y1", 20)
       .attr("y2", viz.height)
       .attr("x1", mouse[0])
       .attr("x2", mouse[0]);
+
     select(".hover-top-rect").attr("x", function () {
       return topRectHoverFn(mouse[0]);
     });
+
     select(".hover-ft-rect")
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + 7;
       })
       .style("fill", getColourById(ftId));
+
     select(".hover-value")
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + 22;
       })
       .text(getLabelById(ftId) + ": " + valueFormat(dataPoint[ftId]) + " MW");
+
+    select(".hover-total")
+      .attr("x", function () {
+        return topRectHoverFn(mouse[0]) + topRectWidth - 7;
+      })
+      .text("Total: " + valueFormat(dataPointTotal) + " MW");
+
     select(".hover-bottom-rect")
       .attr("x", function () {
         return bottomRectHoverFn(mouse[0]);
       })
       .attr("y", viz.height);
+
     select(".hover-date")
       .attr("x", function () {
         return bottomRectHoverFn(mouse[0]) + bottomLeftEdge;

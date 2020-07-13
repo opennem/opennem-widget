@@ -8,9 +8,8 @@ import {
 } from "./chart-functions";
 
 export default function (viz, data) {
-  console.log(viz, data);
   setup(viz, data);
-  drawTitle(viz);
+  drawTitle(viz, data);
   drawXAxisText(viz);
   drawStackedAreaHover(viz, data);
   drawXAxisGrid(viz);

@@ -55,13 +55,16 @@
   fill: #000;
   font-size: 10px;
   font-weight: 500;
-
 }
 
 .opennem-widget .hover-date {
   fill: #fff;
   font-size: 9px;
   text-anchor: middle;
+}
+
+.opennem-widget .hover-total {
+  text-anchor: end;
 }
 
 .opennem-widget footer {
@@ -72,6 +75,7 @@
   padding: 3px 4px;
   background-color: rgba(255, 255, 255, .7);
   border-radius: 0 0 5px 5px;
+  font-weight: 300;
 }
 
 .opennem-widget footer a {
@@ -86,6 +90,20 @@
 
 .opennem-widget .opennem-logo {
   margin-right: 3px;
+}
+
+.opennem-widget .stats {
+  white-space: pre;
+}
+
+.opennem-widget tspan.stat-value {
+  font-weight: 700;
+  fill: #c74523;
+}
+
+.opennem-widget tspan.stat-title {
+  font-weight: 300;
+  fill: #000;
 }
 
 .opennem-widget #legend-table {

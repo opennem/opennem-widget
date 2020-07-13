@@ -47,6 +47,22 @@ export const fuelTechColours = {
   battery_discharging: "#00A2FA",
 };
 
+export const fuelTechRenewables = {
+  biomass: true,
+  black_coal: false,
+  brown_coal: false,
+  distillate: false,
+  gas_ccgt: false,
+  gas_ocgt: false,
+  gas_recip: false,
+  gas_steam: false,
+  hydro: true,
+  rooftop_solar: true,
+  solar: true,
+  wind: true,
+  battery_discharging: false,
+};
+
 export const fuelTechKeys = Object.keys(fuelTechs);
 
 export const fuelTechIds = (function () {
@@ -82,6 +98,16 @@ export function getColourById(id) {
 
 export function isRoofSolar(id) {
   return id === fuelTechs.rooftop_solar;
+}
+
+export function isRenewable(id) {
+  let renewable = false;
+  fuelTechKeys.forEach((key) => {
+    if (fuelTechs[key] === id) {
+      renewable = fuelTechRenewables[key];
+    }
+  });
+  return renewable;
 }
 
 export function isValidFuelTech(id) {
