@@ -5,6 +5,7 @@ import {
   drawXAxisText,
   drawYAxis,
   drawStackedAreaHover,
+  resize,
 } from "./chart-functions";
 
 export default function (viz, data) {
@@ -14,4 +15,8 @@ export default function (viz, data) {
   drawStackedAreaHover(viz, data);
   drawXAxisGrid(viz);
   drawYAxis(viz);
+
+  window.addEventListener("resize", () => {
+    resize(viz, data);
+  });
 }

@@ -35,6 +35,8 @@ export default function (chartId) {
     });
 
   return {
+    chartId: chartId,
+    margin: margin,
     width: width,
     height: height,
     svg: svg,

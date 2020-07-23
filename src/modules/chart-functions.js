@@ -1,4 +1,4 @@
-import { select, mouse as d3Mouse } from "d3-selection";
+import { select, selectAll, mouse as d3Mouse } from "d3-selection";
 import { timeFormat as d3TimeFormat } from "d3-time-format";
 import { format } from "d3-format";
 import { extent, bisector } from "d3-array";
@@ -92,6 +92,23 @@ export function drawTitle(viz, data) {
     .attr("class", "stat-value")
     .text(renewablePercentage + "%");
 }
+
+export function resize(viz, data) {
+  const updatedWidth = document.getElementById(viz.chartId).offsetWidth;
+  viz.width = updatedWidth - viz.margin.left - viz.margin.right;
+  viz.svg.attr("width", viz.width + viz.margin.left + viz.margin.right);
+  viz.x.rangeRound([0, viz.width]);
+
+  const chartId = "#" + viz.chartId;
+
+  selectAll(chartId + " .axis--x").remove();
+  select(chartId + " .stacked-area").remove();
+  select(chartId + " .hover-group").remove();
+  drawXAxisText(viz);
+  drawXAxisGrid(viz);
+  drawStackedAreaHover(viz, data);
+}
+
 export function drawXAxisGrid(viz) {
   viz.g
     .append("g")
