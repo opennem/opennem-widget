@@ -94,7 +94,9 @@ export function drawTitle(viz, data) {
 }
 
 export function resize(viz, data) {
-  const updatedWidth = document.getElementById(viz.chartId).offsetWidth;
+  const offsetWidth = document.getElementById(viz.chartId).offsetWidth;
+  const updatedWidth = offsetWidth < 280 ? 280 : offsetWidth;
+
   viz.width = updatedWidth - viz.margin.left - viz.margin.right;
   viz.svg.attr("width", viz.width + viz.margin.left + viz.margin.right);
   viz.x.rangeRound([0, viz.width]);
@@ -102,11 +104,16 @@ export function resize(viz, data) {
   const chartId = "#" + viz.chartId;
 
   selectAll(chartId + " .axis--x").remove();
+  selectAll(chartId + " .axis--y").remove();
   select(chartId + " .stacked-area").remove();
   select(chartId + " .hover-group").remove();
+  select(chartId + " .title").remove();
+  select(chartId + " .stats").remove();
+  drawTitle(viz, data);
   drawXAxisText(viz);
-  drawXAxisGrid(viz);
   drawStackedAreaHover(viz, data);
+  drawXAxisGrid(viz);
+  drawYAxis(viz);
 }
 
 export function drawXAxisGrid(viz) {

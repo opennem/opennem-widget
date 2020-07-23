@@ -7,7 +7,8 @@ export default function (chartId) {
   const svg = select("#" + chartId)
     .style("height", divHeight + "px")
     .append("svg");
-  const divWidth = document.getElementById(chartId).offsetWidth;
+  const offsetWidth = document.getElementById(chartId).offsetWidth;
+  const divWidth = offsetWidth < 280 ? 280 : offsetWidth;
   const margin = { top: 0, right: 0, bottom: 15, left: 0 };
   const width = divWidth - margin.left - margin.right;
   const height = divHeight - margin.top - margin.bottom;
