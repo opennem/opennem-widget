@@ -65,7 +65,7 @@ export function drawTitle(viz, data) {
   viz.g
     .append("text")
     .attr("class", "title")
-    .attr("x", 6)
+    .attr("x", 7)
     .attr("y", 14)
     .style("fill", "#333")
     .append("tspan")
@@ -184,7 +184,7 @@ export function drawYAxis(viz) {
   yAxis
     .selectAll("text")
     .attr("y", -7)
-    .attr("x", 1)
+    .attr("x", 7)
     .style("pointer-events", "none")
     .style("text-anchor", "start");
 }
