@@ -13,7 +13,8 @@ import {
 } from "./fuel-techs";
 
 const dateFormat = d3TimeFormat("%_d %b, %I:%M %p");
-const valueFormat = format(",.0f");
+const valueFormat = (value) =>
+  value >= 0.999 ? format(",.0f")(value) : format(",.2f")(value);
 const percentFormat = format(",.2f");
 
 function calculateTotalConsumptionAndRenewables(data) {
@@ -47,7 +48,7 @@ export function setup(viz, data) {
       return d.key;
     })
   );
-  viz.y.domain([0, 33000]);
+  viz.y.domain([0, 33]);
   viz.stack.keys(fuelTechIds).value(function value(d, key) {
     return d.value[key];
   });
@@ -68,7 +69,7 @@ export function drawTitle(viz, data) {
     .attr("y", 14)
     .style("fill", "#333")
     .append("tspan")
-    .text("MW")
+    .text("GW")
     .style("font-size", 8)
     .style("font-weight", "bold");
 
@@ -84,7 +85,7 @@ export function drawTitle(viz, data) {
     .text("Av.: ")
     .append("tspan")
     .attr("class", "stat-value")
-    .text(averageConsumption + " MW     ")
+    .text(averageConsumption + " GW      ")
     .append("tspan")
     .attr("class", "stat-title")
     .text("Renewables: ")
@@ -189,7 +190,7 @@ export function drawYAxis(viz) {
 }
 
 export function drawStackedAreaHover(viz, data) {
-  const topRectWidth = 260;
+  const topRectWidth = 200;
   const topLeftEdge = topRectWidth / 2;
   const topRightEdge = viz.width - topLeftEdge;
   const topRectHoverFn = function (mouseLoc) {
@@ -298,13 +299,13 @@ export function drawStackedAreaHover(viz, data) {
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + 22;
       })
-      .text(getLabelById(ftId) + ": " + valueFormat(dataPoint[ftId]) + " MW");
+      .text(getLabelById(ftId) + ": " + valueFormat(dataPoint[ftId]) + " GW");
 
     select(".hover-total")
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + topRectWidth - 7;
       })
-      .text("Total: " + valueFormat(dataPointTotal) + " MW");
+      .text("Total: " + valueFormat(dataPointTotal) + " GW");
 
     select(".hover-bottom-rect")
       .attr("x", function () {

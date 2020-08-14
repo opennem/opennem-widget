@@ -48,7 +48,7 @@ export default function (data) {
             array[k][d.id] =
               typeof history[rSolarIndex] === "undefined"
                 ? 0
-                : history[rSolarIndex];
+                : history[rSolarIndex] / 1000;
 
             if (k !== 0) {
               if (k % 6 === 0) {
@@ -58,7 +58,7 @@ export default function (data) {
           }
         } else {
           for (let j = 0; j < length; j++) {
-            array[j][d.id] = d.history.data[j];
+            array[j][d.id] = d.history.data[j] / 1000;
           }
         }
       }
