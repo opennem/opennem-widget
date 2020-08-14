@@ -118,34 +118,19 @@ export function resize(viz, data) {
 }
 
 export function drawXAxisGrid(viz) {
-  viz.g
+  const xAxis = viz.g
     .append("g")
     .attr("class", "axis axis--x")
     .attr("transform", "translate(0," + viz.height + ")")
     .style("pointer-events", "none")
-    .call(
-      axisBottom(viz.x)
-        .ticks(3)
-        .tickSize(-viz.height)
-        .tickFormat(function (d) {
-          var currentHour = d.getHours();
-          var currentMinute = d.getMinutes();
-          var dayFormat = d3TimeFormat("%_d %b");
-          var timeFormat = d3TimeFormat("%H:%M");
-          var formatted = timeFormat(d);
-
-          if (currentHour === 0 && currentMinute === 0) {
-            formatted = dayFormat(d);
-          }
-          return formatted;
-        })
-    )
-    .selectAll("text")
-    .remove();
+    .call(axisBottom(viz.x).ticks(3).tickSize(-viz.height + 20))
+  
+  xAxis.selectAll("text").remove();
+  xAxis.selectAll("line").attr("y1", 0);
 }
 
 export function drawXAxisText(viz) {
-  viz.g
+  const xAxis = viz.g
     .append("g")
     .attr("class", "axis axis--x")
     .attr("transform", "translate(0," + viz.height + ")")
@@ -167,12 +152,12 @@ export function drawXAxisText(viz) {
           return formatted;
         })
     )
-    .selectAll("text")
-    .attr("y", 5)
-    .attr("x", 1)
-    .style("text-anchor", "start")
-    .selectAll("line")
-    .remove();
+    
+    xAxis.selectAll("text")
+      .attr("y", 5)
+      .attr("x", 1)
+      .style("text-anchor", "start")
+    xAxis.selectAll("line").remove();
 }
 
 export function drawYAxis(viz) {
@@ -190,7 +175,7 @@ export function drawYAxis(viz) {
 }
 
 export function drawStackedAreaHover(viz, data) {
-  const topRectWidth = 200;
+  const topRectWidth = 230;
   const topLeftEdge = topRectWidth / 2;
   const topRightEdge = viz.width - topLeftEdge;
   const topRectHoverFn = function (mouseLoc) {
