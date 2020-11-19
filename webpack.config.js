@@ -23,8 +23,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: "src/img/",
-          to: "img/[name].[ext]",
+          from: "src/img/**/**",
         },
       ],
     }),
