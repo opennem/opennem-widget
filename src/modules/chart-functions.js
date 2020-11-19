@@ -123,8 +123,12 @@ export function drawXAxisGrid(viz) {
     .attr("class", "axis axis--x")
     .attr("transform", "translate(0," + viz.height + ")")
     .style("pointer-events", "none")
-    .call(axisBottom(viz.x).ticks(3).tickSize(-viz.height + 20))
-  
+    .call(
+      axisBottom(viz.x)
+        .ticks(3)
+        .tickSize(-viz.height + 20)
+    );
+
   xAxis.selectAll("text").remove();
   xAxis.selectAll("line").attr("y1", 0);
 }
@@ -151,13 +155,14 @@ export function drawXAxisText(viz) {
           }
           return formatted;
         })
-    )
-    
-    xAxis.selectAll("text")
-      .attr("y", 5)
-      .attr("x", 1)
-      .style("text-anchor", "start")
-    xAxis.selectAll("line").remove();
+    );
+
+  xAxis
+    .selectAll("text")
+    .attr("y", 5)
+    .attr("x", 1)
+    .style("text-anchor", "start");
+  xAxis.selectAll("line").remove();
 }
 
 export function drawYAxis(viz) {

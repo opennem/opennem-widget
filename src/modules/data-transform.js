@@ -58,7 +58,8 @@ export default function (data) {
           }
         } else {
           for (let j = 0; j < length; j++) {
-            array[j][d.id] = d.history.data[j] / 1000;
+            const value = d.history.data[j] ? d.history.data[j] / 1000 : 0;
+            array[j][d.id] = value;
           }
         }
       }
