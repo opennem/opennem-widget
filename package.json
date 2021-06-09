@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "webpack-dev-server --open --config webpack.config.dev.js"
+    "start": "webpack-dev-server --open --config webpack.config.dev.js",
+    "release": "release-it"
   },
   "keywords": [],
   "author": "Steven Tan (@chienleng)",
@@ -17,6 +18,7 @@
     "html-webpack-plugin": "^4.3.0",
     "mini-css-extract-plugin": "^0.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "release-it": "^9.8.0",
     "terser-webpack-plugin": "^3.0.6",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
