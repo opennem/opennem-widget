@@ -14,7 +14,7 @@ function getDataPoint(data) {
 
 export default function (data) {
   if (data.length > 0) {
-    const length = 2016;
+    const length = 2017;
     let array = [];
     const dataPoint = getDataPoint(data);
 
