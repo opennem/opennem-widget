@@ -10,7 +10,7 @@ import {
   getLabelById,
   getColourById,
   isRenewable,
-} from "./fuel-techs";
+} from "./fuel-techs-wem";
 
 const dateFormat = d3TimeFormat("%_d %b, %I:%M %p");
 const valueFormat = (value) =>
@@ -18,6 +18,7 @@ const valueFormat = (value) =>
 const percentFormat = format(",.2f");
 
 function calculateTotalConsumptionAndRenewables(data) {
+  console.log(data)
   data.forEach(function (d) {
     let totalConsumption = 0;
     let totalRenewable = 0;

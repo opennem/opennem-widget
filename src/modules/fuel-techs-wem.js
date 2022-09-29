@@ -1,40 +1,16 @@
 // this also define the stack order
 export const fuelTechs = {
-  rooftop_solar: "au.nem.fuel_tech.solar_rooftop.power",
-  solar: "au.nem.fuel_tech.solar_utility.power",
-  wind: "au.nem.fuel_tech.wind.power",
-  hydro: "au.nem.fuel_tech.hydro.power",
-  battery_discharging: "au.nem.fuel_tech.battery_discharging.power",
-  gas_wcmg: 'au.nem.fuel_tech.gas_wcmg.power',
-  gas_recip: "au.nem.fuel_tech.gas_recip.power",
-  gas_ocgt: "au.nem.fuel_tech.gas_ocgt.power",
-  gas_ccgt: "au.nem.fuel_tech.gas_ccgt.power",
-  gas_steam: "au.nem.fuel_tech.gas_steam.power",
-  distillate: "au.nem.fuel_tech.distillate.power",
-  bioenergy_biomass: "au.nem.fuel_tech.bioenergy_biomass.power",
-  black_coal: "au.nem.fuel_tech.coal_black.power",
-  brown_coal: "au.nem.fuel_tech.coal_brown.power",
-};
-
-export const fuelTechsWem = {
   rooftop_solar: "au.wem.fuel_tech.solar_rooftop.power",
   solar: "au.wem.fuel_tech.solar_utility.power",
   wind: "au.wem.fuel_tech.wind.power",
-  hydro: "au.wem.fuel_tech.hydro.power",
-  battery_discharging: "au.wem.fuel_tech.battery_discharging.power",
-  gas_wcmg: 'au.wem.fuel_tech.gas_wcmg.power',
-  gas_recip: "au.wem.fuel_tech.gas_recip.power",
   gas_ocgt: "au.wem.fuel_tech.gas_ocgt.power",
   gas_ccgt: "au.wem.fuel_tech.gas_ccgt.power",
-  gas_steam: "au.wem.fuel_tech.gas_steam.power",
-  distillate: "au.wem.fuel_tech.distillate.power",
-  bioenergy_biomass: "au.wem.fuel_tech.bioenergy_biomass.power",
+  bioenergy_biogas: "au.wem.fuel_tech.bioenergy_biogas.power",
   black_coal: "au.wem.fuel_tech.coal_black.power",
-  brown_coal: "au.wem.fuel_tech.coal_brown.power",
 };
 
 export const fuelTechLabels = {
-  bioenergy_biomass: "Bioenergy (Biomass)",
+  bioenergy_biogas: "Bioenergy (Biogas)",
   black_coal: "Black Coal",
   brown_coal: "Brown Coal",
   distillate: "Distillate",
@@ -51,7 +27,7 @@ export const fuelTechLabels = {
 };
 
 export const fuelTechColours = {
-  bioenergy_biomass: "#1D7A7A",
+  bioenergy_biogas: "#1D7A7A",
   black_coal: "#121212",
   brown_coal: "#8B572A",
   distillate: "#F35020",
@@ -68,7 +44,7 @@ export const fuelTechColours = {
 };
 
 export const fuelTechRenewables = {
-  bioenergy_biomass: true,
+  bioenergy_biogas: true,
   black_coal: false,
   brown_coal: false,
   distillate: false,

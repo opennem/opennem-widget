@@ -1,4 +1,4 @@
-import { fuelTechIds } from "./fuel-techs";
+import { fuelTechIds } from "./fuel-techs-wem";
 
 export default function (time) {
   const obj = {};
