@@ -1,8 +1,7 @@
 import { nest } from "d3-collection";
 import { mean } from "d3-array";
-import { fuelTechIds } from "./fuel-techs";
 
-export default function (data) {
+export default function (data, fuelTechIds) {
   var coeff = 1000 * 60 * 30; // roll up to 30mins
   var entries = nest()
     .key(function (d) {

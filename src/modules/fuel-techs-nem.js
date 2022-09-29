@@ -16,23 +16,6 @@ export const fuelTechs = {
   brown_coal: "au.nem.fuel_tech.coal_brown.power",
 };
 
-export const fuelTechsWem = {
-  rooftop_solar: "au.wem.fuel_tech.solar_rooftop.power",
-  solar: "au.wem.fuel_tech.solar_utility.power",
-  wind: "au.wem.fuel_tech.wind.power",
-  hydro: "au.wem.fuel_tech.hydro.power",
-  battery_discharging: "au.wem.fuel_tech.battery_discharging.power",
-  gas_wcmg: 'au.wem.fuel_tech.gas_wcmg.power',
-  gas_recip: "au.wem.fuel_tech.gas_recip.power",
-  gas_ocgt: "au.wem.fuel_tech.gas_ocgt.power",
-  gas_ccgt: "au.wem.fuel_tech.gas_ccgt.power",
-  gas_steam: "au.wem.fuel_tech.gas_steam.power",
-  distillate: "au.wem.fuel_tech.distillate.power",
-  bioenergy_biomass: "au.wem.fuel_tech.bioenergy_biomass.power",
-  black_coal: "au.wem.fuel_tech.coal_black.power",
-  brown_coal: "au.wem.fuel_tech.coal_brown.power",
-};
-
 export const fuelTechLabels = {
   bioenergy_biomass: "Bioenergy (Biomass)",
   black_coal: "Black Coal",

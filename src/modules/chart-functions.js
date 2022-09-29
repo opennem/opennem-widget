@@ -4,28 +4,19 @@ import { format } from "d3-format";
 import { extent, bisector } from "d3-array";
 import { axisLeft, axisBottom } from "d3-axis";
 
-import {
-  fuelTechIds,
-  fuelTechIdColours,
-  getLabelById,
-  getColourById,
-  isRenewable,
-} from "./fuel-techs-wem";
-
 const dateFormat = d3TimeFormat("%_d %b, %I:%M %p");
 const valueFormat = (value) =>
   value >= 0.999 ? format(",.0f")(value) : format(",.2f")(value);
 const percentFormat = format(",.2f");
 
-function calculateTotalConsumptionAndRenewables(data) {
-  console.log(data)
+function calculateTotalConsumptionAndRenewables(data, fuelTechs) {
   data.forEach(function (d) {
     let totalConsumption = 0;
     let totalRenewable = 0;
-    fuelTechIds.forEach(function (ft) {
-      totalConsumption += d.value[ft];
-      if (isRenewable(ft)) {
-        totalRenewable += d.value[ft];
+    fuelTechs.fuelTechIds.forEach(function (ft) {
+      totalConsumption += d.value ? d.value[ft] : d[ft];
+      if (fuelTechs.isRenewable(ft)) {
+        totalRenewable += d.value ? d.value[ft] : d[ft];
       }
     });
     d._totalConsumption = totalConsumption;
@@ -41,21 +32,21 @@ function sumTotals(data, property) {
   return total;
 }
 
-export function setup(viz, data) {
-  calculateTotalConsumptionAndRenewables(data);
+export function setup(viz, data, fuelTechs, maxY) {
+  calculateTotalConsumptionAndRenewables(data, fuelTechs);
 
   viz.x.domain(
     extent(data, function (d) {
       return d.key;
     })
   );
-  viz.y.domain([0, 33]);
-  viz.stack.keys(fuelTechIds).value(function value(d, key) {
-    return d.value[key];
+  viz.y.domain([0, maxY]);
+  viz.stack.keys(fuelTechs.fuelTechIds).value(function value(d, key) {
+    return d.value ? d.value[key] : d[key];
   });
 }
 
-export function drawTitle(viz, data) {
+export function drawTitle(viz, data, unit) {
   const allConsumption = sumTotals(data, "_totalConsumption");
   const allRenewable = sumTotals(data, "_totalRenewable");
   const averageConsumption = valueFormat(allConsumption / data.length);
@@ -70,7 +61,7 @@ export function drawTitle(viz, data) {
     .attr("y", 14)
     .style("fill", "#333")
     .append("tspan")
-    .text("GW")
+    .text(unit)
     .style("font-size", 8)
     .style("font-weight", "bold");
 
@@ -86,7 +77,7 @@ export function drawTitle(viz, data) {
     .text("Av.: ")
     .append("tspan")
     .attr("class", "stat-value")
-    .text(averageConsumption + " GW      ")
+    .text(averageConsumption + " " + unit + "      ")
     .append("tspan")
     .attr("class", "stat-title")
     .text("Renewables: ")
@@ -95,7 +86,7 @@ export function drawTitle(viz, data) {
     .text(renewablePercentage + "%");
 }
 
-export function resize(viz, data) {
+export function resize(viz, data, fuelTechs) {
   const offsetWidth = document.getElementById(viz.chartId).offsetWidth;
   const updatedWidth = offsetWidth < 280 ? 280 : offsetWidth;
 
@@ -113,7 +104,7 @@ export function resize(viz, data) {
   select(chartId + " .stats").remove();
   drawTitle(viz, data);
   drawXAxisText(viz);
-  drawStackedAreaHover(viz, data);
+  drawStackedAreaHover(viz, data, fuelTechs);
   drawXAxisGrid(viz);
   drawYAxis(viz);
 }
@@ -180,8 +171,8 @@ export function drawYAxis(viz) {
     .style("text-anchor", "start");
 }
 
-export function drawStackedAreaHover(viz, data) {
-  const topRectWidth = 230;
+export function drawStackedAreaHover(viz, data, fuelTechs, unit) {
+  const topRectWidth = 250;
   const topLeftEdge = topRectWidth / 2;
   const topRightEdge = viz.width - topLeftEdge;
   const topRectHoverFn = function (mouseLoc) {
@@ -209,7 +200,7 @@ export function drawStackedAreaHover(viz, data) {
     .append("path")
     .attr("class", "area")
     .style("fill", function (d) {
-      return fuelTechIdColours[d.key];
+      return fuelTechs.fuelTechIdColours[d.key];
     })
     .attr("d", viz.area);
 
@@ -284,19 +275,19 @@ export function drawStackedAreaHover(viz, data) {
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + 7;
       })
-      .style("fill", getColourById(ftId));
+      .style("fill", fuelTechs.getColourById(ftId));
 
     select(".hover-value")
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + 22;
       })
-      .text(getLabelById(ftId) + ": " + valueFormat(dataPoint[ftId]) + " GW");
+      .text(fuelTechs.getLabelById(ftId) + ": " + valueFormat(dataPoint[ftId]) + " " + unit);
 
     select(".hover-total")
       .attr("x", function () {
         return topRectHoverFn(mouse[0]) + topRectWidth - 7;
       })
-      .text("Total: " + valueFormat(dataPointTotal) + " GW");
+      .text("Total: " + valueFormat(dataPointTotal) + " " + unit);
 
     select(".hover-bottom-rect")
       .attr("x", function () {

@@ -8,15 +8,16 @@ import {
   resize,
 } from "./chart-functions";
 
-export default function (viz, data) {
-  setup(viz, data);
-  drawTitle(viz, data);
+export default function (viz, data, fuelTechs, maxY, useGW) {
+  const unit = useGW ? "GW" : "MW";
+  setup(viz, data, fuelTechs, maxY);
+  drawTitle(viz, data, unit);
   drawXAxisText(viz);
-  drawStackedAreaHover(viz, data);
+  drawStackedAreaHover(viz, data, fuelTechs, unit);
   drawXAxisGrid(viz);
   drawYAxis(viz);
 
   window.addEventListener("resize", () => {
-    resize(viz, data);
+    resize(viz, data, fuelTechs);
   });
 }
