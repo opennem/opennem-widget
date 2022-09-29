@@ -1,6 +1,4 @@
-import { fuelTechIds } from "./fuel-techs";
-
-export default function (time) {
+export default function (time, fuelTechIds) {
   const obj = {};
 
   obj.date = new Date(time);
