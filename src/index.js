@@ -11,7 +11,7 @@ const fts = region === 'NEM' ? nemFts : wemFts;
 const regionLength = region === 'NEM' ? 2017 : 337;
 const is5Min = region === 'NEM' ? true : false;
 const useGW = region === 'NEM' ? true : false;
-const nemMaxY = useGW ? 40 : 40000;
+const nemMaxY = useGW ? 37 : 37000;
 const wemMaxY = useGW ? 3.3 : 3300;
 const maxY = region === 'NEM' ? nemMaxY : wemMaxY;
 const showLast3Days = true;
