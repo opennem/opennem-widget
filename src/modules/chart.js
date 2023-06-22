@@ -6,10 +6,10 @@ import {
   drawYAxis,
   drawStackedAreaHover,
   resize,
-} from "./chart-functions";
+} from './chart-functions';
 
 export default function (viz, data, fuelTechs, maxY, useGW) {
-  const unit = useGW ? "GW" : "MW";
+  const unit = useGW ? 'GW' : 'MW';
   setup(viz, data, fuelTechs, maxY);
   drawTitle(viz, data, unit);
   drawXAxisText(viz);
@@ -17,7 +17,7 @@ export default function (viz, data, fuelTechs, maxY, useGW) {
   drawXAxisGrid(viz);
   drawYAxis(viz);
 
-  window.addEventListener("resize", () => {
-    resize(viz, data, fuelTechs);
+  window.addEventListener('resize', () => {
+    resize(viz, data, fuelTechs, unit);
   });
 }
