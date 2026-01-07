@@ -1,3 +1,9 @@
+# This project is now archived.
+
+For the new version: see [here](https://github.com/opennem/openelectricity/tree/main/src/routes/(micro)/widget)
+
+[Demo](https://openelectricity.org.au/widget)
+
 # OpenNEM Widget
 
 <img src="https://github.com/opennem/opennem-widget/blob/master/github-preview.png?raw=true" alt="OpenNEM Widget Preview" width="480" />
